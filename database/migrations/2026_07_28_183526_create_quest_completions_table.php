@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('quest_migrations', function (Blueprint $table) {
+        Schema::create('quest_completions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('quest_id')->constrained('quests')->onDelete('cascade');
             $table->date('completed_on');
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('quest_migrations');
+        Schema::dropIfExists('quest_completions');
     }
 };
