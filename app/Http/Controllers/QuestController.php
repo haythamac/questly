@@ -6,21 +6,18 @@ use App\Http\Requests\StoreQuestRequest;
 use App\Http\Requests\UpdateQuestRequest;
 use App\Http\Resources\QuestResource;
 use App\Models\Quest;
+use App\Models\QuestCompletion;
 use Illuminate\Http\Request;
+
+use function Illuminate\Support\now;
 
 class QuestController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return QuestResource::collection(Quest::all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreQuestRequest $request)
     {
         $quest = Quest::create($request->validated());
@@ -30,32 +27,48 @@ class QuestController extends Controller
             ->setStatusCode(201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Quest $quest)
     {
         return new QuestResource($quest);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateQuestRequest $request, Quest $quest)
     {
         $quest->update($request->validated());
         return new QuestResource($quest);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Quest $quest)
     {
         $quest->delete();
 
         return response()->json([
             'message' => "Quest deleted"
+        ]);
+    }
+
+    public function completion(Quest $quest)
+    {
+        $isCompletedToday = QuestCompletion::where('quest_id', '=', $quest->id)
+            ->where('completed_on', '=', today())
+            ->exists();
+
+        if($isCompletedToday)
+        {
+            return response()->json([
+                'message' => 'Quest already completed',
+            ], 409);
+        }
+
+        $completion = QuestCompletion::create([
+            'quest_id' => $quest->id,
+            'completed_on' => today(),
+            'completed_at' => now()
+        ]);
+
+        return response()->json([
+            'message' => 'Quest completed!',
+            'data' => $completion
         ]);
     }
 }

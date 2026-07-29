@@ -14,6 +14,8 @@ Route::get('quest/{quest}', [QuestController::class, 'show']);
 Route::put('quest/{quest}', [QuestController::class, 'update']);
 Route::delete('quest/{quest}', [QuestController::class, 'destroy']);
 
+Route::post('quest/{quest}/complete', [QuestController::class, 'completion']);
+
 Route::middleware('auth:sanctum')->group(function () {
     //
 });

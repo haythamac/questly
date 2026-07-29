@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('quest_completions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('quest_id')->constrained('quests')->onDelete('cascade');
-            $table->date('completed_on');
+            $table->date('completed_on');           // the day it counts for
+            $table->timestamp('completed_at');      // when you actually clicked it
+            $table->unique(['quest_id', 'completed_on']);
             $table->timestamps();
         });
     }
