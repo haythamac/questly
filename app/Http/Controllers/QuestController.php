@@ -14,8 +14,8 @@ use function Illuminate\Support\now;
 class QuestController extends Controller
 {
     public function index()
-    {
-        return QuestResource::collection(Quest::all());
+    {   
+        return QuestResource::collection(Quest::withTodayCompletion()->get());
     }
 
     public function store(StoreQuestRequest $request)

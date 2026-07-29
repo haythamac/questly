@@ -13,7 +13,7 @@ class QuestCompletion extends Model
     {
         return [
             'completed_on' => 'date',
-            'completed_at' => 'date'
+            'completed_at' => 'datetime'
         ];
     }
     

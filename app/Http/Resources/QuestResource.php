@@ -16,7 +16,8 @@ class QuestResource extends JsonResource
     {
         return [
             'title' => $this->title,
-            'note' => $this->note
+            'note' => $this->note,
+            'is_completed_today' => $this->completions_exists
         ];
     }
 }
