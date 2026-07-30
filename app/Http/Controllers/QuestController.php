@@ -51,7 +51,7 @@ class QuestController extends Controller
         ]);
     }
 
-    public function completion(Quest $quest)
+    public function complete(Quest $quest)
     {
         $isCompletedToday = QuestCompletion::where('quest_id', '=', $quest->id)
             ->where('completed_on', '=', today())
@@ -75,5 +75,21 @@ class QuestController extends Controller
             'data' => $completion
         ]);
     }
-    
+
+    public function uncomplete(Quest $quest)
+    {
+
+        if(!$quest->isCompletedToday())
+        {   
+            return response()->json([
+                'message' => 'Quest not completed today',
+            ], 409); 
+        }
+
+        $quest->completions()->where('completed_on', '=', today())->delete();
+
+        return response()->json([
+            'message' => 'Quest uncomplete'
+        ]);   
+    }
 }

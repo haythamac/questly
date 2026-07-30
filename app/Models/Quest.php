@@ -27,4 +27,9 @@ class Quest extends Model
             'completions' => fn ($q) => $q->where('completed_on', '=', today())
         ]);
     }
+
+    public function isCompletedToday()
+    {
+        return $this->completions()->where('completed_on', '=', today())->exists();
+    }
 }
