@@ -17,6 +17,8 @@ Route::delete('quest/{quest}', [QuestController::class, 'destroy']);
 Route::post('quest/{quest}/complete', [QuestController::class, 'complete']);
 Route::delete('quest/{quest}/complete', [QuestController::class, 'uncomplete']);
 
+Route::get('quest/{quest}/streak', [QuestController::class, 'getStreak']);
+
 Route::middleware('auth:sanctum')->group(function () {
     //
 });

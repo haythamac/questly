@@ -79,7 +79,7 @@ class QuestController extends Controller
     public function uncomplete(Quest $quest)
     {
 
-        if(!$quest->isCompletedToday())
+        if(!$quest->isCompletedToday(today()))
         {   
             return response()->json([
                 'message' => 'Quest not completed today',
@@ -91,5 +91,13 @@ class QuestController extends Controller
         return response()->json([
             'message' => 'Quest uncomplete'
         ]);   
+    }
+
+    public function getStreak(Quest $quest)
+    {
+        return response()->json([
+            'message' => 'Sucess getting streak',
+            'data' => $quest->currentStreak()
+        ], 200);
     }
 }

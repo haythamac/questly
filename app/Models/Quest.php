@@ -28,8 +28,23 @@ class Quest extends Model
         ]);
     }
 
-    public function isCompletedToday()
+    public function isCompletedOn($date)
     {
-        return $this->completions()->where('completed_on', '=', today())->exists();
+        return $this->completions()->where('completed_on', '=', $date)->exists();
+    }
+
+    public function currentStreak()
+    {
+        $streak = 0;
+
+        $cursor = $this->isCompletedOn(today()) ? today() : today()->subDay();
+
+        while ($this->isCompletedOn($cursor))
+        {
+            $streak++;
+            $cursor->subDay();
+        } 
+
+        return $streak;
     }
 }
