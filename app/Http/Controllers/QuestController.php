@@ -9,6 +9,10 @@ use App\Models\Quest;
 use App\Models\QuestCompletion;
 use Illuminate\Http\Request;
 
+
+
+
+
 use function Illuminate\Support\now;
 
 class QuestController extends Controller
@@ -71,4 +75,5 @@ class QuestController extends Controller
             'data' => $completion
         ]);
     }
+    
 }
