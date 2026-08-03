@@ -32,4 +32,30 @@ class AuthController extends Controller
             'data' => $user
         ]);
     }
+
+    public function login(Request $request)
+    {
+        // validate request
+        // check if it matches
+        // create token
+        // response
+        $validated = $request->validate([
+            'username' => ['required', 'string'],
+            'password' => ['required']
+        ]);
+
+        $user = User::where('username', '=', $validated['username'])->first();
+        if(!$user || !Hash::check($validated['password'], $user->password))
+        {
+            return response()->json(['message' => 'Invalid credentials'], 401); 
+        }
+
+        $apiToken = $user->createToken('api')->plainTextToken;
+
+        return response()->json([
+            'message' => 'success',
+            'data' => $user,
+            'auth_token' => $apiToken
+        ], 200);
+    }
 }
