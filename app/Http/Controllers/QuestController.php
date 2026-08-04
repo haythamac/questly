@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateQuestRequest;
 use App\Http\Resources\QuestResource;
 use App\Models\Quest;
 use App\Models\QuestCompletion;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 
@@ -17,6 +18,8 @@ use function Illuminate\Support\now;
 
 class QuestController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(Request $request)
     {   
         $user = $request->user();
@@ -34,29 +37,22 @@ class QuestController extends Controller
 
     public function show(Quest $quest, Request $request)
     {
-        if($quest->user_id != $request->user()->id)
-        {
-            return response()->json(['message' => 'Not Found'], 404);
-        }
+        $this->authorize('view', $quest);
+
         return new QuestResource($quest);
     }
 
     public function update(UpdateQuestRequest $request, Quest $quest)
     {
-        if($quest->user_id != $request->user()->id)
-        {
-            return response()->json(['message' => 'Not Authorized'], 403);
-        }
+        $this->authorize('update', $quest);
+
         $quest->update($request->validated());
         return new QuestResource($quest);
     }
 
     public function destroy(Quest $quest, Request $request)
     {
-        if($quest->user_id != $request->user()->id)
-        {
-            return response()->json(['message' => 'Not Found'], 404);
-        }
+        $this->authorize('delete', $quest);
 
         $quest->delete();
 
@@ -67,6 +63,8 @@ class QuestController extends Controller
 
     public function complete(Quest $quest)
     {
+        $this->authorize('update', $quest);
+
         $isCompletedToday = QuestCompletion::where('quest_id', '=', $quest->id)
             ->where('completed_on', '=', today())
             ->exists();
@@ -92,7 +90,8 @@ class QuestController extends Controller
 
     public function uncomplete(Quest $quest)
     {
-
+        $this->authorize('update', $quest);
+        
         if(!$quest->isCompletedToday(today()))
         {   
             return response()->json([
