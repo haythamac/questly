@@ -31,7 +31,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function quest(): HasMany
+    public function quests(): HasMany
     {
         return $this->HasMany(Quest::class);
     }

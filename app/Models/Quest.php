@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['title', 'note'])]
+#[Fillable(['user_id', 'title', 'note'])]
 class Quest extends Model
 {
     public function user(): BelongsTo

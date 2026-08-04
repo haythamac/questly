@@ -17,33 +17,47 @@ use function Illuminate\Support\now;
 
 class QuestController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {   
-        return QuestResource::collection(Quest::withTodayCompletion()->get());
+        $user = $request->user();
+        return QuestResource::collection($user->quests()->withTodayCompletion()->get());
     }
 
     public function store(StoreQuestRequest $request)
     {
-        $quest = Quest::create($request->validated());
+        $quest = Quest::create([...$request->validated(), 'user_id' => $request->user()->id]);
 
         return (new QuestResource($quest))
             ->response()
             ->setStatusCode(201);
     }
 
-    public function show(Quest $quest)
+    public function show(Quest $quest, Request $request)
     {
+        if($quest->user_id != $request->user()->id)
+        {
+            return response()->json(['message' => 'Not Found'], 404);
+        }
         return new QuestResource($quest);
     }
 
     public function update(UpdateQuestRequest $request, Quest $quest)
     {
+        if($quest->user_id != $request->user()->id)
+        {
+            return response()->json(['message' => 'Not Authorized'], 403);
+        }
         $quest->update($request->validated());
         return new QuestResource($quest);
     }
 
-    public function destroy(Quest $quest)
+    public function destroy(Quest $quest, Request $request)
     {
+        if($quest->user_id != $request->user()->id)
+        {
+            return response()->json(['message' => 'Not Found'], 404);
+        }
+
         $quest->delete();
 
         return response()->json([

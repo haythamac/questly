@@ -12,17 +12,17 @@ Route::get('/user', function (Request $request) {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('quest', [QuestController::class, 'index']);
-Route::post('quest', [QuestController::class, 'store']);
-Route::get('quest/{quest}', [QuestController::class, 'show']);
-Route::put('quest/{quest}', [QuestController::class, 'update']);
-Route::delete('quest/{quest}', [QuestController::class, 'destroy']);
+Route::middleware('auth:sanctum')->group(function() {
+    Route::get('quest', [QuestController::class, 'index']);
+    Route::post('quest', [QuestController::class, 'store']);
+    Route::get('quest/{quest}', [QuestController::class, 'show']);
+    Route::put('quest/{quest}', [QuestController::class, 'update']);
+    Route::delete('quest/{quest}', [QuestController::class, 'destroy']);
 
-Route::post('quest/{quest}/complete', [QuestController::class, 'complete']);
-Route::delete('quest/{quest}/complete', [QuestController::class, 'uncomplete']);
+    Route::post('quest/{quest}/complete', [QuestController::class, 'complete']);
+    Route::delete('quest/{quest}/complete', [QuestController::class, 'uncomplete']);
 
-Route::get('quest/{quest}/streak', [QuestController::class, 'getStreak']);
-
-Route::middleware('auth:sanctum')->group(function () {
-    //
+    Route::get('quest/{quest}/streak', [QuestController::class, 'getStreak']);
 });
+
+
